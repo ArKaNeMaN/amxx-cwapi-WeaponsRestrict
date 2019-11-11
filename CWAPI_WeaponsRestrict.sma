@@ -16,7 +16,13 @@ public CWAPI_LoadWeaponsPost(){
 
     LoadRestrict();
 
+    register_srvcmd("CWAPI_WR_ReloadConfig", "SrvCmd_ReloadConfig");
+
     server_print("[%s v%s] loaded.", PLUG_NAME, PLUG_VER);
+}
+
+public SrvCmd_ReloadConfig(){
+    LoadRestrict();
 }
 
 public Hook_CWAPI_AddItem(ItemId){
@@ -49,14 +55,14 @@ LoadRestrict(){
     else if(file_exists(fmt("%s/Main.json", File)))
         add(File, charsmax(File), "/Main.json");
     else{
-        set_fail_state("[ERROR] Config file '%s' not found", fmt("%s/Main.json", File));
+        log_amx("[ERROR] Config file '%s' not found", fmt("%s/Main.json", File));
         return;
     }
 
     new JSON:List = json_parse(File, true);
     if(List == Invalid_JSON || !json_is_object(List)){
         json_free(List);
-        set_fail_state("[ERROR] Invalid config structure. File '%s'.", File);
+        log_amx("[ERROR] Invalid config structure. File '%s'.", File);
         return;
     }
     
